@@ -1,0 +1,240 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #080810;
+  color: #f8f9fa;
+  font-family: "Inter", sans-serif;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  background: rgba(14, 14, 28, 0.96);
+  border-bottom: 1px solid rgba(0, 245, 255, 0.25);
+  padding: 0.65rem;
+  backdrop-filter: blur(14px);
+}
+
+.toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.toolbar h1 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #00f5ff;
+  white-space: nowrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.control-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  color: #8fffe0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.btn {
+  border: 1px solid rgba(0, 245, 255, 0.5);
+  color: #f8f9fa;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+}
+
+.btn:hover,
+.btn.active {
+  background: #00f5ff;
+  color: #080810;
+  border-color: #00f5ff;
+  box-shadow: 0 0 18px rgba(0, 245, 255, 0.45);
+}
+
+.danger-btn {
+  border-color: rgba(255, 56, 96, 0.7);
+}
+
+.danger-btn:hover {
+  background: #ff3860;
+  color: #fff;
+  border-color: #ff3860;
+}
+
+.toggle-btn.active {
+  background: #00ff88;
+  color: #080810;
+  border-color: #00ff88;
+}
+
+.slider-group {
+  width: 110px;
+}
+
+.slider-group label {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.68rem;
+  color: #b7b7c9;
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+}
+
+.form-range {
+  height: 0.6rem;
+}
+
+.swatches {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.color-swatch.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.65);
+}
+
+.playground {
+  width: 100vw;
+  height: 100vh;
+  padding-top: 92px;
+  position: relative;
+}
+
+#physics-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at top, rgba(191, 95, 255, 0.18), transparent 35%),
+    radial-gradient(circle at bottom left, rgba(0, 245, 255, 0.12), transparent 35%),
+    #0a0a18;
+  cursor: crosshair;
+}
+
+.info-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  width: min(340px, calc(100vw - 2rem));
+  background: rgba(10, 10, 24, 0.9);
+  border: 1px solid rgba(191, 95, 255, 0.35);
+  color: #f8f9fa;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 24px rgba(191, 95, 255, 0.18);
+}
+
+.info-panel h2 {
+  font-size: 0.82rem;
+  color: #00f5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.55rem;
+}
+
+.info-panel h2:not(:first-child) {
+  margin-top: 1rem;
+}
+
+#sim-stats,
+#body-stats {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.76rem;
+  color: #cfd3ff;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.25rem 0;
+}
+
+.stat-label {
+  color: #8fffe0;
+}
+
+.stat-value {
+  color: #f8f9fa;
+  text-align: right;
+}
+
+@media (max-width: 992px) {
+  body {
+    overflow: auto;
+  }
+
+  .playground {
+    height: 100dvh;
+    padding-top: 205px;
+  }
+
+  .slider-group {
+    width: 95px;
+  }
+
+  .info-panel {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .toolbar-row {
+    gap: 0.45rem;
+  }
+
+  .toolbar h1 {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .playground {
+    padding-top: 250px;
+  }
+
+  .info-panel {
+    max-height: 190px;
+    overflow-y: auto;
+  }
+}

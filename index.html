@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Physics Playground</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="physics-styles.css" />
+</head>
+<body>
+
+  <header class="toolbar">
+    <div class="toolbar-row">
+
+      <h1>Physics Playground</h1>
+
+      <div class="control-group">
+        <span class="control-label">Tool</span>
+        <button class="btn tool-btn active" data-tool="spawn">Spawn</button>
+        <button class="btn tool-btn" data-tool="drag">Drag</button>
+        <button class="btn tool-btn" data-tool="delete">Delete</button>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Shape</span>
+        <button class="btn shape-btn active" data-shape="circle">Circle</button>
+        <button class="btn shape-btn" data-shape="rect">Rect</button>
+        <button class="btn shape-btn" data-shape="triangle">Triangle</button>
+      </div>
+
+      <div class="slider-group">
+        <label for="size-slider">Size</label>
+        <input id="size-slider" class="form-range" type="range" min="15" max="70" value="30" />
+      </div>
+
+      <div class="slider-group">
+        <label for="mass-slider">Mass</label>
+        <input id="mass-slider" class="form-range" type="range" min="1" max="10" value="1" />
+      </div>
+
+      <div class="slider-group">
+        <label for="bounce-slider">Bounce</label>
+        <input id="bounce-slider" class="form-range" type="range" min="0" max="1" step="0.1" value="0.6" />
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Color</span>
+        <button class="color-swatch active" data-color="#00f5ff" style="background: #00f5ff;"></button>
+        <button class="color-swatch" data-color="#bf5fff" style="background: #bf5fff;"></button>
+        <button class="color-swatch" data-color="#ff3860" style="background: #ff3860;"></button>
+        <button class="color-swatch" data-color="#f5a623" style="background: #f5a623;"></button>
+        <button class="color-swatch" data-color="#00ff88" style="background: #00ff88;"></button>
+        <button class="color-swatch" data-color="#f0f0f0" style="background: #f0f0f0;"></button>
+      </div>
+
+      <div class="control-group">
+        <button id="gravity-toggle" class="btn toggle-btn active">Gravity ON</button>
+        <button id="friction-toggle" class="btn toggle-btn active">Friction ON</button>
+        <button id="pause-btn" class="btn">Pause</button>
+        <button id="clear-btn" class="btn danger-btn">Clear</button>
+        <button id="reset-camera-btn" class="btn">Reset Camera</button>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="playground">
+    <canvas id="physics-canvas"></canvas>
+
+    <section class="info-panel card">
+      <div class="card-body">
+        <h2>Simulation Stats</h2>
+        <div id="sim-stats">Loading simulation...</div>
+
+        <h2>Selected Object</h2>
+        <div id="body-stats">No object selected.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="physics-vectors.js"></script>
+  <script src="physics-bodies.js"></script>
+  <script src="physics-engine.js"></script>
+  <script src="physics-renderer.js"></script>
+  <script src="physics-app.js"></script>
+</body>
+</html>
