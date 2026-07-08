@@ -25,7 +25,6 @@ const appState = {
   }
 };
 
-// Starts the app.
 function init() {
   canvas = document.getElementById("physics-canvas");
   resizeCanvas();
@@ -48,7 +47,6 @@ function init() {
   requestAnimationFrame(gameLoop);
 }
 
-// Keeps the canvas matching the visible screen size.
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
 
@@ -61,7 +59,6 @@ function resizeCanvas() {
   }
 }
 
-// Runs the animation loop.
 function gameLoop(timestamp) {
   const dt = lastTimestamp ? (timestamp - lastTimestamp) / 1000 : 0;
   lastTimestamp = timestamp;
@@ -78,81 +75,88 @@ function gameLoop(timestamp) {
   renderer.drawWalls();
   renderer.drawGround();
 
-  engine.bodies.forEach((body) => {
+  engine.bodies.forEach(function (body) {
     renderer.drawBody(body, body === appState.selectedBody || body === hoveredBody);
   });
 
   renderer.drawStats({
-    fps,
-    count: engine.bodies.filter((body) => !body.isStatic).length
+    fps: fps,
+    count: engine.bodies.filter(function (body) {
+      return !body.isStatic;
+    }).length
   });
 
   updateInfoPanel(appState.selectedBody);
   requestAnimationFrame(gameLoop);
 }
 
-// Connects toolbar buttons and inputs.
 function bindToolbarEvents() {
-  $(".tool-btn").on("click", function () {
-    $(".tool-btn").removeClass("active");
-    $(this).addClass("active");
-    appState.tool = $(this).data("tool");
+  document.querySelectorAll(".tool-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      setActiveButton(".tool-btn", button);
+      appState.tool = button.dataset.tool;
+    });
   });
 
-  $(".shape-btn").on("click", function () {
-    $(".shape-btn").removeClass("active");
-    $(this).addClass("active");
-    appState.shape = $(this).data("shape");
+  document.querySelectorAll(".shape-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      setActiveButton(".shape-btn", button);
+      appState.shape = button.dataset.shape;
+    });
   });
 
-  $("#size-slider").on("input", function () {
-    appState.spawnSize = Number($(this).val());
+  document.getElementById("size-slider").addEventListener("input", function (event) {
+    appState.spawnSize = Number(event.target.value);
   });
 
-  $("#mass-slider").on("input", function () {
-    appState.spawnMass = Number($(this).val());
+  document.getElementById("mass-slider").addEventListener("input", function (event) {
+    appState.spawnMass = Number(event.target.value);
   });
 
-  $("#bounce-slider").on("input", function () {
-    appState.spawnRestitution = Number($(this).val());
+  document.getElementById("bounce-slider").addEventListener("input", function (event) {
+    appState.spawnRestitution = Number(event.target.value);
   });
 
-  $(".color-swatch").on("click", function () {
-    $(".color-swatch").removeClass("active");
-    $(this).addClass("active");
-    appState.spawnColor = $(this).data("color");
+  document.querySelectorAll(".color-swatch").forEach(function (button) {
+    button.addEventListener("click", function () {
+      setActiveButton(".color-swatch", button);
+      appState.spawnColor = button.dataset.color;
+    });
   });
 
-  $("#gravity-toggle").on("click", function () {
+  document.getElementById("gravity-toggle").addEventListener("click", function (event) {
     appState.gravityOn = !appState.gravityOn;
-    $(this).toggleClass("active", appState.gravityOn);
-    $(this).text(appState.gravityOn ? "Gravity ON" : "Gravity OFF");
+    event.target.classList.toggle("active", appState.gravityOn);
+    event.target.textContent = appState.gravityOn ? "Gravity ON" : "Gravity OFF";
   });
 
-  $("#friction-toggle").on("click", function () {
+  document.getElementById("friction-toggle").addEventListener("click", function (event) {
     appState.frictionOn = !appState.frictionOn;
-    $(this).toggleClass("active", appState.frictionOn);
-    $(this).text(appState.frictionOn ? "Friction ON" : "Friction OFF");
+    event.target.classList.toggle("active", appState.frictionOn);
+    event.target.textContent = appState.frictionOn ? "Friction ON" : "Friction OFF";
   });
 
-  $("#pause-btn").on("click", function () {
+  document.getElementById("pause-btn").addEventListener("click", function (event) {
     appState.isPaused = !appState.isPaused;
-    $(this).text(appState.isPaused ? "Resume" : "Pause");
+    event.target.textContent = appState.isPaused ? "Resume" : "Pause";
   });
 
-  $("#clear-btn").on("click", function () {
+  document.getElementById("clear-btn").addEventListener("click", function () {
     if (confirm("Clear all objects?")) {
       engine.clearBodies();
       appState.selectedBody = null;
     }
   });
 
-  $("#reset-camera-btn").on("click", function () {
-    resizeCanvas();
+  document.getElementById("reset-camera-btn").addEventListener("click", resizeCanvas);
+}
+
+function setActiveButton(selector, activeButton) {
+  document.querySelectorAll(selector).forEach(function (button) {
+    button.classList.toggle("active", button === activeButton);
   });
 }
 
-// Connects canvas mouse events.
 function bindCanvasEvents() {
   canvas.addEventListener("click", handleCanvasClick);
   canvas.addEventListener("mousedown", handleCanvasMouseDown);
@@ -164,9 +168,8 @@ function bindCanvasEvents() {
   window.addEventListener("touchend", handleCanvasMouseUp);
 }
 
-// Handles spawning and deleting.
-function handleCanvasClick(e) {
-  const mouse = getCanvasPoint(e);
+function handleCanvasClick(event) {
+  const mouse = getCanvasPoint(event);
 
   if (appState.tool === "spawn") {
     createSpawnBody(mouse.x, mouse.y);
@@ -182,11 +185,10 @@ function handleCanvasClick(e) {
   }
 }
 
-// Starts dragging a body.
-function handleCanvasMouseDown(e) {
+function handleCanvasMouseDown(event) {
   if (appState.tool !== "drag") return;
 
-  const mouse = getCanvasPoint(e);
+  const mouse = getCanvasPoint(event);
   const body = findBodyAtPoint(mouse.x, mouse.y);
 
   if (!body) return;
@@ -197,16 +199,15 @@ function handleCanvasMouseDown(e) {
 
   appState.dragState = {
     isDragging: true,
-    body,
+    body: body,
     offsetX: mouse.x - body.position.x,
     offsetY: mouse.y - body.position.y,
     history: [{ position: new Vec2(mouse.x, mouse.y), time: performance.now() }]
   };
 }
 
-// Moves dragged body and updates hover.
-function handleCanvasMouseMove(e) {
-  const mouse = getCanvasPoint(e);
+function handleCanvasMouseMove(event) {
+  const mouse = getCanvasPoint(event);
   hoveredBody = findBodyAtPoint(mouse.x, mouse.y);
 
   if (!appState.dragState.isDragging) return;
@@ -228,7 +229,6 @@ function handleCanvasMouseMove(e) {
   }
 }
 
-// Releases the dragged body and throws it.
 function handleCanvasMouseUp() {
   if (!appState.dragState.isDragging) return;
 
@@ -249,10 +249,9 @@ function handleCanvasMouseUp() {
   appState.dragState.body = null;
 }
 
-// Converts touch start into drag behavior.
-function handleTouchStart(e) {
-  e.preventDefault();
-  const touch = e.touches[0];
+function handleTouchStart(event) {
+  event.preventDefault();
+  const touch = event.touches[0];
 
   handleCanvasMouseDown({
     clientX: touch.clientX,
@@ -260,10 +259,9 @@ function handleTouchStart(e) {
   });
 }
 
-// Converts touch movement into mouse movement behavior.
-function handleTouchMove(e) {
-  e.preventDefault();
-  const touch = e.touches[0];
+function handleTouchMove(event) {
+  event.preventDefault();
+  const touch = event.touches[0];
 
   handleCanvasMouseMove({
     clientX: touch.clientX,
@@ -271,7 +269,6 @@ function handleTouchMove(e) {
   });
 }
 
-// Creates a new physics body from toolbar settings.
 function createSpawnBody(x, y) {
   const size = appState.spawnSize;
 
@@ -291,7 +288,6 @@ function createSpawnBody(x, y) {
   appState.selectedBody = body;
 }
 
-// Finds the top object under the mouse.
 function findBodyAtPoint(x, y) {
   for (let i = engine.bodies.length - 1; i >= 0; i--) {
     const body = engine.bodies[i];
@@ -310,48 +306,48 @@ function findBodyAtPoint(x, y) {
   return null;
 }
 
-// Gets mouse position inside the canvas.
-function getCanvasPoint(e) {
+function getCanvasPoint(event) {
   const rect = canvas.getBoundingClientRect();
 
   return {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
   };
 }
 
-// Updates the bottom info panel.
 function updateInfoPanel(body) {
-  const movingBodies = engine.bodies.filter((item) => !item.isStatic);
-  const totalKineticEnergy = movingBodies.reduce((sum, item) => {
+  const movingBodies = engine.bodies.filter(function (item) {
+    return !item.isStatic;
+  });
+
+  const totalKineticEnergy = movingBodies.reduce(function (sum, item) {
     return sum + 0.5 * item.mass * Math.pow(item.velocity.magnitude(), 2);
   }, 0);
 
-  $("#sim-stats").html(`
+  document.getElementById("sim-stats").innerHTML = `
     <div class="stat-line"><span class="stat-label">FPS</span><span class="stat-value">${fps}</span></div>
     <div class="stat-line"><span class="stat-label">Objects</span><span class="stat-value">${movingBodies.length}</span></div>
     <div class="stat-line"><span class="stat-label">Total KE</span><span class="stat-value">${totalKineticEnergy.toFixed(1)}</span></div>
-  `);
+  `;
 
   if (!body) {
-    $("#body-stats").html("No object selected.");
+    document.getElementById("body-stats").textContent = "No object selected.";
     return;
   }
 
   const kineticEnergy = 0.5 * body.mass * Math.pow(body.velocity.magnitude(), 2);
 
-  $("#body-stats").html(`
+  document.getElementById("body-stats").innerHTML = `
     <div class="stat-line"><span class="stat-label">Shape</span><span class="stat-value">${body.shape}</span></div>
     <div class="stat-line"><span class="stat-label">Mass</span><span class="stat-value">${body.mass}</span></div>
     <div class="stat-line"><span class="stat-label">Position</span><span class="stat-value">${formatVec(body.position)}</span></div>
     <div class="stat-line"><span class="stat-label">Velocity</span><span class="stat-value">${formatVec(body.velocity)}</span></div>
     <div class="stat-line"><span class="stat-label">Kinetic E</span><span class="stat-value">${kineticEnergy.toFixed(1)}</span></div>
-  `);
+  `;
 }
 
-// Formats vector values for the UI.
-function formatVec(v) {
-  return `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`;
+function formatVec(vector) {
+  return `(${vector.x.toFixed(1)}, ${vector.y.toFixed(1)})`;
 }
 
-$(document).ready(init);
+document.addEventListener("DOMContentLoaded", init);
