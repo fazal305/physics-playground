@@ -9,9 +9,11 @@ class Body {
     height = 60,
     color = "#00f5ff",
     restitution = 0.6,
-    isStatic = false
+    isStatic = false,
   }) {
-    this.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+    this.id = crypto.randomUUID
+      ? crypto.randomUUID()
+      : String(Date.now() + Math.random());
     this.shape = shape;
     this.position = position;
     this.velocity = velocity;
@@ -27,7 +29,6 @@ class Body {
     this.isDragging = false;
   }
 
-  // Adds force to the body using force divided by mass.
   applyForce(forceVec2) {
     if (this.isStatic || this.isDragging) {
       return;
@@ -37,7 +38,6 @@ class Body {
     this.acceleration = this.acceleration.add(addedAcceleration);
   }
 
-  // Updates velocity and position every frame.
   update(dt) {
     if (this.isStatic || this.isDragging) {
       this.acceleration = Vec2.zero();
@@ -49,14 +49,13 @@ class Body {
     this.acceleration = Vec2.zero();
   }
 
-  // Returns a simple box around the body for collision checks.
   getBounds() {
     if (this.shape === "circle") {
       return {
         x: this.position.x - this.radius,
         y: this.position.y - this.radius,
         width: this.radius * 2,
-        height: this.radius * 2
+        height: this.radius * 2,
       };
     }
 
@@ -64,7 +63,7 @@ class Body {
       x: this.position.x - this.width / 2,
       y: this.position.y - this.height / 2,
       width: this.width,
-      height: this.height
+      height: this.height,
     };
   }
 }

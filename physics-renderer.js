@@ -4,12 +4,10 @@ class Renderer {
     this.ctx = canvas.getContext("2d");
   }
 
-  // Clears the full canvas before drawing the next frame.
   clear() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  // Draws a body based on its shape.
   drawBody(body, isSelected = false) {
     if (body.shape === "circle") {
       this.drawCircle(body, isSelected);
@@ -22,7 +20,6 @@ class Renderer {
     this.drawVelocityArrow(body);
   }
 
-  // Draws a circle body.
   drawCircle(body, isSelected) {
     const ctx = this.ctx;
 
@@ -40,7 +37,6 @@ class Renderer {
     ctx.restore();
   }
 
-  // Draws a rectangle body.
   drawRect(body, isSelected) {
     const ctx = this.ctx;
 
@@ -56,12 +52,11 @@ class Renderer {
       body.position.x - body.width / 2,
       body.position.y - body.height / 2,
       body.width,
-      body.height
+      body.height,
     );
     ctx.restore();
   }
 
-  // Draws a triangle body.
   drawTriangle(body, isSelected) {
     const ctx = this.ctx;
     const size = body.width / 2;
@@ -83,7 +78,6 @@ class Renderer {
     ctx.restore();
   }
 
-  // Draws the ground platform.
   drawGround() {
     const ctx = this.ctx;
     const groundY = this.canvas.height - 45;
@@ -103,7 +97,6 @@ class Renderer {
     ctx.restore();
   }
 
-  // Draws the left and right wall lines.
   drawWalls() {
     const ctx = this.ctx;
 
@@ -122,7 +115,6 @@ class Renderer {
     ctx.restore();
   }
 
-  // Draws an arrow showing the velocity direction.
   drawVelocityArrow(body) {
     if (body.isStatic || body.velocity.magnitude() < 10) {
       return;
@@ -152,7 +144,6 @@ class Renderer {
     ctx.restore();
   }
 
-  // Draws an outer glow around selected or hovered bodies.
   drawSelectionHighlight(body) {
     const ctx = this.ctx;
     const bounds = body.getBounds();
@@ -168,13 +159,12 @@ class Renderer {
       bounds.x - 6,
       bounds.y - 6,
       bounds.width + 12,
-      bounds.height + 12
+      bounds.height + 12,
     );
 
     ctx.restore();
   }
 
-  // Draws small simulation stats in the top-right corner.
   drawStats(stats) {
     const ctx = this.ctx;
 

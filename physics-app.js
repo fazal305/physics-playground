@@ -21,8 +21,8 @@ const appState = {
     body: null,
     offsetX: 0,
     offsetY: 0,
-    history: []
-  }
+    history: [],
+  },
 };
 
 function init() {
@@ -34,8 +34,8 @@ function init() {
     friction: true,
     bounds: {
       width: canvas.width,
-      height: canvas.height
-    }
+      height: canvas.height,
+    },
   });
 
   renderer = new Renderer(canvas);
@@ -76,14 +76,17 @@ function gameLoop(timestamp) {
   renderer.drawGround();
 
   engine.bodies.forEach(function (body) {
-    renderer.drawBody(body, body === appState.selectedBody || body === hoveredBody);
+    renderer.drawBody(
+      body,
+      body === appState.selectedBody || body === hoveredBody,
+    );
   });
 
   renderer.drawStats({
     fps: fps,
     count: engine.bodies.filter(function (body) {
       return !body.isStatic;
-    }).length
+    }).length,
   });
 
   updateInfoPanel(appState.selectedBody);
@@ -105,17 +108,23 @@ function bindToolbarEvents() {
     });
   });
 
-  document.getElementById("size-slider").addEventListener("input", function (event) {
-    appState.spawnSize = Number(event.target.value);
-  });
+  document
+    .getElementById("size-slider")
+    .addEventListener("input", function (event) {
+      appState.spawnSize = Number(event.target.value);
+    });
 
-  document.getElementById("mass-slider").addEventListener("input", function (event) {
-    appState.spawnMass = Number(event.target.value);
-  });
+  document
+    .getElementById("mass-slider")
+    .addEventListener("input", function (event) {
+      appState.spawnMass = Number(event.target.value);
+    });
 
-  document.getElementById("bounce-slider").addEventListener("input", function (event) {
-    appState.spawnRestitution = Number(event.target.value);
-  });
+  document
+    .getElementById("bounce-slider")
+    .addEventListener("input", function (event) {
+      appState.spawnRestitution = Number(event.target.value);
+    });
 
   document.querySelectorAll(".color-swatch").forEach(function (button) {
     button.addEventListener("click", function () {
@@ -124,22 +133,32 @@ function bindToolbarEvents() {
     });
   });
 
-  document.getElementById("gravity-toggle").addEventListener("click", function (event) {
-    appState.gravityOn = !appState.gravityOn;
-    event.target.classList.toggle("active", appState.gravityOn);
-    event.target.textContent = appState.gravityOn ? "Gravity ON" : "Gravity OFF";
-  });
+  document
+    .getElementById("gravity-toggle")
+    .addEventListener("click", function (event) {
+      appState.gravityOn = !appState.gravityOn;
+      event.target.classList.toggle("active", appState.gravityOn);
+      event.target.textContent = appState.gravityOn
+        ? "Gravity ON"
+        : "Gravity OFF";
+    });
 
-  document.getElementById("friction-toggle").addEventListener("click", function (event) {
-    appState.frictionOn = !appState.frictionOn;
-    event.target.classList.toggle("active", appState.frictionOn);
-    event.target.textContent = appState.frictionOn ? "Friction ON" : "Friction OFF";
-  });
+  document
+    .getElementById("friction-toggle")
+    .addEventListener("click", function (event) {
+      appState.frictionOn = !appState.frictionOn;
+      event.target.classList.toggle("active", appState.frictionOn);
+      event.target.textContent = appState.frictionOn
+        ? "Friction ON"
+        : "Friction OFF";
+    });
 
-  document.getElementById("pause-btn").addEventListener("click", function (event) {
-    appState.isPaused = !appState.isPaused;
-    event.target.textContent = appState.isPaused ? "Resume" : "Pause";
-  });
+  document
+    .getElementById("pause-btn")
+    .addEventListener("click", function (event) {
+      appState.isPaused = !appState.isPaused;
+      event.target.textContent = appState.isPaused ? "Resume" : "Pause";
+    });
 
   document.getElementById("clear-btn").addEventListener("click", function () {
     if (confirm("Clear all objects?")) {
@@ -148,7 +167,9 @@ function bindToolbarEvents() {
     }
   });
 
-  document.getElementById("reset-camera-btn").addEventListener("click", resizeCanvas);
+  document
+    .getElementById("reset-camera-btn")
+    .addEventListener("click", resizeCanvas);
 }
 
 function setActiveButton(selector, activeButton) {
@@ -202,7 +223,9 @@ function handleCanvasMouseDown(event) {
     body: body,
     offsetX: mouse.x - body.position.x,
     offsetY: mouse.y - body.position.y,
-    history: [{ position: new Vec2(mouse.x, mouse.y), time: performance.now() }]
+    history: [
+      { position: new Vec2(mouse.x, mouse.y), time: performance.now() },
+    ],
   };
 }
 
@@ -216,12 +239,12 @@ function handleCanvasMouseMove(event) {
 
   body.position = new Vec2(
     mouse.x - appState.dragState.offsetX,
-    mouse.y - appState.dragState.offsetY
+    mouse.y - appState.dragState.offsetY,
   );
 
   appState.dragState.history.push({
     position: new Vec2(mouse.x, mouse.y),
-    time: performance.now()
+    time: performance.now(),
   });
 
   if (appState.dragState.history.length > 6) {
@@ -255,7 +278,7 @@ function handleTouchStart(event) {
 
   handleCanvasMouseDown({
     clientX: touch.clientX,
-    clientY: touch.clientY
+    clientY: touch.clientY,
   });
 }
 
@@ -265,7 +288,7 @@ function handleTouchMove(event) {
 
   handleCanvasMouseMove({
     clientX: touch.clientX,
-    clientY: touch.clientY
+    clientY: touch.clientY,
   });
 }
 
@@ -281,7 +304,7 @@ function createSpawnBody(x, y) {
     width: size * 2,
     height: size * 2,
     color: appState.spawnColor,
-    restitution: appState.spawnRestitution
+    restitution: appState.spawnRestitution,
   });
 
   engine.addBody(body);
@@ -311,7 +334,7 @@ function getCanvasPoint(event) {
 
   return {
     x: event.clientX - rect.left,
-    y: event.clientY - rect.top
+    y: event.clientY - rect.top,
   };
 }
 
@@ -335,7 +358,8 @@ function updateInfoPanel(body) {
     return;
   }
 
-  const kineticEnergy = 0.5 * body.mass * Math.pow(body.velocity.magnitude(), 2);
+  const kineticEnergy =
+    0.5 * body.mass * Math.pow(body.velocity.magnitude(), 2);
 
   document.getElementById("body-stats").innerHTML = `
     <div class="stat-line"><span class="stat-label">Shape</span><span class="stat-value">${body.shape}</span></div>
